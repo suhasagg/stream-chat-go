@@ -117,6 +117,13 @@ func (c *Client) newRequest(method, path string, params url.Values, data interfa
 	return r, nil
 }
 
+// MakeRequest allows one to make API calls against the stream API that the
+// library does not currently natively support.
+func (c *Client) MakeRequest(method, path string, params url.Values,
+	data interface{}, result easyjson.Unmarshaler) error {
+	return c.makeRequest(method, path, params, data, result)
+}
+
 func (c *Client) makeRequest(method, path string, params url.Values,
 	data interface{}, result easyjson.Unmarshaler) error {
 
