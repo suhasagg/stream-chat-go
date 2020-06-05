@@ -42,7 +42,7 @@ func (c *Client) setHeaders(r *http.Request) {
 	r.Header.Set("Stream-Auth-Type", "jwt")
 }
 
-func (c *Client) parseResponse(resp *http.Response, result easyjson.Unmarshaler) error {
+func (c *Client) parseResponse(resp *http.Response, result interface{}) error {
 	if resp.Body != nil {
 		defer resp.Body.Close()
 	}
@@ -54,7 +54,11 @@ func (c *Client) parseResponse(resp *http.Response, result easyjson.Unmarshaler)
 	}
 
 	if result != nil {
-		return easyjson.UnmarshalFromReader(resp.Body, result)
+		if ejResult, ok := result.(easyjson.Unmarshaler); ok {
+			return easyjson.UnmarshalFromReader(resp.Body, ejResult)
+		} else {
+			return json.NewDecoder(resp.Body).Decode(result)
+		}
 	}
 
 	return nil
@@ -120,12 +124,12 @@ func (c *Client) newRequest(method, path string, params url.Values, data interfa
 // MakeRequest allows one to make API calls against the stream API that the
 // library does not currently natively support.
 func (c *Client) MakeRequest(method, path string, params url.Values,
-	data interface{}, result easyjson.Unmarshaler) error {
+	data interface{}, result interface{}) error {
 	return c.makeRequest(method, path, params, data, result)
 }
 
 func (c *Client) makeRequest(method, path string, params url.Values,
-	data interface{}, result easyjson.Unmarshaler) error {
+	data interface{}, result interface{}) error {
 
 	r, err := c.newRequest(method, path, params, data)
 	if err != nil {
