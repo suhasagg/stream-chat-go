@@ -64,6 +64,12 @@ func (c *Client) parseResponse(resp *http.Response, result interface{}) error {
 	return nil
 }
 
+// DebugSetToken is a function for debugging tokens. It shouldn't need to be
+// called for any production app.
+func (c *Client) DebugSetToken(token string) {
+	c.authToken = token
+}
+
 func (c *Client) requestURL(path string, values url.Values) (string, error) {
 	_url, err := url.Parse(c.BaseURL + "/" + path)
 	if err != nil {
