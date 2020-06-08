@@ -30,9 +30,10 @@ type Client struct {
 	BaseURL string
 	HTTP    *http.Client `json:"-"`
 
-	apiKey    string
-	apiSecret []byte
-	authToken string
+	apiKey        string
+	apiSecret     []byte
+	authToken     string
+	customHeaders map[string]string
 }
 
 func (c *Client) setHeaders(r *http.Request) {
@@ -40,6 +41,10 @@ func (c *Client) setHeaders(r *http.Request) {
 	r.Header.Set("X-Stream-Client", versionHeader())
 	r.Header.Set("Authorization", c.authToken)
 	r.Header.Set("Stream-Auth-Type", "jwt")
+
+	for k, v := range c.customHeaders {
+		r.Header.Set(k, v)
+	}
 }
 
 func (c *Client) parseResponse(resp *http.Response, result interface{}) error {
@@ -64,10 +69,12 @@ func (c *Client) parseResponse(resp *http.Response, result interface{}) error {
 	return nil
 }
 
-// DebugSetToken is a function for debugging tokens. It shouldn't need to be
-// called for any production app.
-func (c *Client) DebugSetToken(token string) {
-	c.authToken = token
+func (c *Client) AddCustomHeader(key, value string) {
+	if c.customHeaders == nil {
+		c.customHeaders = map[string]string{}
+	}
+
+	c.customHeaders[key] = value
 }
 
 func (c *Client) requestURL(path string, values url.Values) (string, error) {
