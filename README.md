@@ -42,6 +42,8 @@ Access pattern
 
 1)request chat entries from a specific chat room by time range
 
+### Expose prometheus metrics
+
 
 ### Quickstart
 
