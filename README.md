@@ -32,11 +32,16 @@ go get github.com/GetStream/stream-chat-go/v3
 - [x] Channel search
 - [x] Message search
 
-### HBase persistence layer
+### HBase persistence layer 
 
 HBase table and rowkey design
+
+https://github.com/tsuna/gohbase
+
 Access pattern
+
 1)request chat entries from a specific chat room by time range
+
 
 ### Quickstart
 
