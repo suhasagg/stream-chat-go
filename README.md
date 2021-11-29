@@ -44,6 +44,9 @@ Access pattern
 
 ### Expose prometheus metrics
 
+### For chat application with multiple room options - Embedded Key Value store usage
+Badger is designed to support high throughput writes and reads with persistence in mind.
+One can also try badger with sync writes set to false in option, it would give  better performance and also persist the data in async way.
 
 ### Quickstart
 
